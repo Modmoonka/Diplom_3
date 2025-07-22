@@ -2,7 +2,7 @@ package praktikum;
 
 public class EnvConfig {
         public static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
-        public static final String REGISTER_PAGE_URL = "https://stellarburgers.nomoreparties.site/register";
+        public static final String REGISTER_URL= "https://stellarburgers.nomoreparties.site/register";
         public static final String FORGOT_PASSWORD_URL = "https://stellarburgers.nomoreparties.site/forgot-password";
         public static final String CREATE_USER_ENDPOINT = "/api/auth/register";
         public static final String LOGIN_USER_ENDPOINT = "/api/auth/login";

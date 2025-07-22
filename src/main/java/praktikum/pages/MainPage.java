@@ -1,0 +1,88 @@
+package praktikum.pages;
+
+import io.qameta.allure.Step;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import static praktikum.EnvConfig.*;
+import java.time.Duration;
+
+/**
+ * Тест для проверки работы главной страницы'
+ */
+
+public class MainPage {
+    private final WebDriver driver;
+
+    //Локатор через кнопку "Личный кабинет"
+    private static final By PERSONAL_ACCOUNT = By.xpath(".//a[@href='/account']");
+    //Локатор по кнопке "Войти в аккаунт" на главной
+    private static final By AUTH_BUTTON = By.xpath(".//button[text()='Войти в аккаунт']");
+    //Локатор конструктора
+    private static final By CONSTRUCTOR_BURGERS = By.xpath(".//p[text() = 'Конструктор']");
+    //Локатор для кнопки "Оформить заказ"
+    private static final By MAKE_ORDER_BUTTON = By.xpath(".//button[text()='Оформить заказ']");
+    //Локаторы для булок
+    public static final By BUNS_BUTTON = By.xpath(".//span[text() = 'Булки']");;
+    //Локаторы для соусов
+    public static final By SAUCES_BUTTON = By.xpath(".//span[text() = 'Соусы']");
+    //Локаторы для начинки
+    public static final By STAFFING_BUTTON = By.xpath(".//span[text() = 'Начинки']");
+    //Локаторы для начинки
+    public static final By SECTION_CONSTRUCTOR= By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
+
+    public MainPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    @Step("Открытие главной страницы")
+    public void openMainPage() { driver.get(BASE_URL);
+    }
+
+    @Step("Клик на кнопку 'Войти в аккаунт'")
+    public void clickAuthButton() {
+        driver.findElement(AUTH_BUTTON).click();
+    }
+
+    @Step("Нажимаем на кнопку Личный Кабинет")
+    public void clickPersonalAccount() {
+        driver.findElement(PERSONAL_ACCOUNT).click();
+    }
+
+    public void waitPageLoad() {
+        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT))
+                .until(ExpectedConditions.visibilityOfElementLocated(CONSTRUCTOR_BURGERS));
+    }
+    @Step("Проверка отображение Конструктора")
+    public boolean isConstructorVisible() {
+        return driver.findElement(CONSTRUCTOR_BURGERS).isDisplayed();
+    }
+
+    @Step("Проверка отображение кнопки 'Оформить заказ'")
+    public boolean isOrderButtonVisible() {
+        return driver.findElement(MAKE_ORDER_BUTTON).isDisplayed();
+    }
+
+    @Step("Клик по разделу булок")
+    public void clickBuns() {
+        driver.findElement(BUNS_BUTTON).click();
+    }
+
+    @Step("Клик по разделу соусов")
+    public void clickSauces() {
+        driver.findElement(SAUCES_BUTTON).click();
+    }
+
+    @Step("Клик по разделу начинок")
+    public void clickStaffing() {
+        driver.findElement(STAFFING_BUTTON).click();
+    }
+
+    @Step("Проверка выбранного раздела")
+    public boolean isSectionSelected(String section) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT));
+        return wait.until(ExpectedConditions.textToBePresentInElementLocated(SECTION_CONSTRUCTOR, section));
+    };
+}
+
