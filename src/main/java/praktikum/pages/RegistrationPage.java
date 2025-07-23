@@ -30,43 +30,52 @@ public class RegistrationPage {
     public RegistrationPage(WebDriver driver) {
         this.driver = driver;
     }
-    @Step("Открытие страницы регистрации")
-    public void openRegPage (){
-        driver.get("https://stellarburgers.nomoreparties.site/register");
+    //Кликнуть в поле Имя
+    public void clickUserName(){
+        driver.findElement(USER_NAME).click();
     }
-
-    @Step("Ввод значения в поле Имя")
-    public void clickName(String name) {
+    //Ввести имя в поле
+    public void setName(String name){
         driver.findElement(USER_NAME).sendKeys(name);
     }
-
-    @Step("Вводим email")
-    public void setEmail(String email) {
+    //Кликнуть в поле Email
+    public void clickEmailField(){
+        driver.findElement(EMAIL_FIELD).click();
+    }
+    //Ввести значение в поле Email
+    public void setEmail(String email){
         driver.findElement(EMAIL_FIELD).sendKeys(email);
     }
-
-    @Step("Ввод пароля ")
-    public void enterPassword(String password) {
+    //Кликнуть в поле Пароль
+    public void clickPassword(){
+        driver.findElement(PASSWORD).click();
+    }
+    //Ввести пароль в поле Пароль
+    public void setPassword(String password){
         driver.findElement(PASSWORD).sendKeys(password);
     }
+    // Ожидание страницы регистрации
+    public void waitlRegistrationPage() {
+        new WebDriverWait(driver, EXPLICIT_WAIT)
+                .until(ExpectedConditions.urlToBe(REGISTER_URL));
+    }
 
-    @Step("Клик по кнопке Зарегистрироваться")
-    public void clickRegister() {
+    //Клик по кнопке регистрация
+    public void clickRegistration() {
         driver.findElement(REGISTRATION_BUTTON).click();
     }
 
-    @Step("Проверка отображения ошибки о некорректности пароля")
-    public String getErrorMessage() {
+    //Клик по кнопке входа
+    public void clickLoginLButton() {
+        driver.findElement(authLinkByRegForm).click();
+    }
+    //Вывод сообщения об ошибке
+    public String getErrorPassword(){
         return driver.findElement(ERROR_MESSAGE).getText();
     }
-
-    public void waitForm() {
-        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT))
-                .until(ExpectedConditions.visibilityOfElementLocated(REGISTRATION_BUTTON));
-    }
-
-    @Step("Клик по кнопке Войти")
-    public void clickAuthLink() {
-        driver.findElement(authLinkByRegForm).click();
+    public void inputRegistrationForm(String name, String email, String password){
+        setName(name);
+        setEmail(email);
+        setPassword(password);
     }
 }

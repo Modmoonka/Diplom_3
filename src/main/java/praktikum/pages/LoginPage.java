@@ -74,7 +74,7 @@ public class LoginPage {
     }
 
     public void waitForm() {
-        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT))
+        new WebDriverWait(driver, EXPLICIT_WAIT)
                 .until(ExpectedConditions.visibilityOfElementLocated(LOGIN));
     }
 }

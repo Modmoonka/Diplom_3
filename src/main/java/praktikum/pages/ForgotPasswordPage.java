@@ -29,7 +29,7 @@ public class ForgotPasswordPage {
     }
 
     public void waitFormIsLoad() {
-        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT))
+        new WebDriverWait(driver, EXPLICIT_WAIT)
                 .until(ExpectedConditions.visibilityOfElementLocated(AUTH_LINK));
     }
 

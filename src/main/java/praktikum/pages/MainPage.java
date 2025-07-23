@@ -50,7 +50,7 @@ public class MainPage {
     }
 
     public void waitPageLoad() {
-        new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT))
+        new WebDriverWait(driver, EXPLICIT_WAIT)
                 .until(ExpectedConditions.visibilityOfElementLocated(CONSTRUCTOR_BURGERS));
     }
     @Step("Проверка отображение Конструктора")

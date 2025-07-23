@@ -1,34 +1,69 @@
 package praktikum;
 
-import org.openqa.selenium.PageLoadStrategy;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class DriverFactory {
-    public static WebDriver create(String browser) {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox", "--start-maximized", "--disable-notifications");
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-        switch (browser.toLowerCase()) {
+    public static WebDriver createDriver(String browserName) {
+        if (browserName == null) {
+            browserName = "chrome"; // если ничего не передали, по умолчанию Chrome
+        }
+        switch (browserName.toLowerCase()) {
             case "chrome":
-                return openChromeDriver(options);
-            case "yandex":
-                return openYandexDriver(options);
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                return new ChromeDriver(chromeOptions);
+
+            case "firefox":
+                WebDriverManager.firefoxdriver().setup();
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.addArguments("--disable-dev-shm-usage");
+                return new FirefoxDriver(firefoxOptions);
+
             default:
-                throw new IllegalArgumentException("Неподдерживаемый браузер: " + browser);
+                throw new IllegalArgumentException("Браузер " + browserName + "не работает");
         }
     }
 
-    private static WebDriver openChromeDriver(ChromeOptions options) {
-        System.setProperty("webdriver.chrome.driver", System.getenv("CHROMEDRIVER"));
-        return new ChromeDriver(options);
+
+    private static final Properties properties = new Properties();
+    static {
+        try (InputStream input = DriverFactory.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (input != null) {
+                properties.load(input);
+            } else {
+                System.err.println("Файл config.properties не найден!");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static WebDriver openYandexDriver(ChromeOptions options) {
-        System.setProperty("webdriver.chrome.driver",
-                System.getenv("CHROMEDRIVER_132"));
-        options.setBinary(System.getenv("YANDEX_BROWSER_PATH"));
-        return new ChromeDriver(options);
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+    public static String getBrowser() {
+        String browser = System.getProperty("browser");
+        if (browser != null) {
+            return browser;
+        }
+        browser = System.getenv("BROWSER");
+        if (browser != null) {
+            return browser;
+        }
+        browser = DriverFactory.getProperty("browser");
+        if (browser != null) {
+            return browser;
+        }
+        return "chrome";
     }
 }
