@@ -9,35 +9,34 @@ import static praktikum.EnvConfig.*;
 import java.time.Duration;
 
 /**
- * Тест для проверки работы главной страницы'
+ * Тест для проверки работы главной страницы
  */
 
 public class MainPage {
     private final WebDriver driver;
 
     //Локатор через кнопку "Личный кабинет"
-    private static final By PERSONAL_ACCOUNT = By.xpath(".//a[@href='/account']");
+    private static final By ACCOUNT_BUTTON = By.xpath(".//a[@href='/account']");
     //Локатор по кнопке "Войти в аккаунт" на главной
     private static final By AUTH_BUTTON = By.xpath(".//button[text()='Войти в аккаунт']");
     //Локатор конструктора
     private static final By CONSTRUCTOR_BURGERS = By.xpath(".//p[text() = 'Конструктор']");
     //Локатор для кнопки "Оформить заказ"
-    private static final By MAKE_ORDER_BUTTON = By.xpath(".//button[text()='Оформить заказ']");
+    private static final By ORDER_BUTTON = By.xpath(".//button[text()='Оформить заказ']");
     //Локаторы для булок
     public static final By BUNS_BUTTON = By.xpath(".//span[text() = 'Булки']");;
     //Локаторы для соусов
     public static final By SAUCES_BUTTON = By.xpath(".//span[text() = 'Соусы']");
     //Локаторы для начинки
     public static final By STAFFING_BUTTON = By.xpath(".//span[text() = 'Начинки']");
-    //Локаторы для начинки
-    public static final By SECTION_CONSTRUCTOR= By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }
 
     @Step("Открытие главной страницы")
-    public void openMainPage() { driver.get(BASE_URL);
+    public void openMainPage() {
+         driver.get(URL_USER);
     }
 
     @Step("Клик на кнопку 'Войти в аккаунт'")
@@ -47,7 +46,7 @@ public class MainPage {
 
     @Step("Нажимаем на кнопку Личный Кабинет")
     public void clickPersonalAccount() {
-        driver.findElement(PERSONAL_ACCOUNT).click();
+        driver.findElement(ACCOUNT_BUTTON).click();
     }
 
     public void waitPageLoad() {
@@ -61,7 +60,7 @@ public class MainPage {
 
     @Step("Проверка отображение кнопки 'Оформить заказ'")
     public boolean isOrderButtonVisible() {
-        return driver.findElement(MAKE_ORDER_BUTTON).isDisplayed();
+        return driver.findElement(ORDER_BUTTON).isDisplayed();
     }
 
     @Step("Клик по разделу булок")
@@ -78,11 +77,5 @@ public class MainPage {
     public void clickStaffing() {
         driver.findElement(STAFFING_BUTTON).click();
     }
-
-    @Step("Проверка выбранного раздела")
-    public boolean isSectionSelected(String section) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT));
-        return wait.until(ExpectedConditions.textToBePresentInElementLocated(SECTION_CONSTRUCTOR, section));
-    };
 }
 
