@@ -1,7 +1,6 @@
 package tests;
 
 import io.qameta.allure.Allure;
-import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
@@ -81,7 +80,6 @@ public class LoginTest {
 
     @Test
     @DisplayName("Авторизация по кнопке «Личный кабинет» на главной")
-    @Description("Тест проверяет что пользователь может аворизоваться через личный кабинет")
     public void checkLoginAccount() {
         Allure.parameter("Проверка в ", browser);
         mainPage.waitPageLoad();
@@ -94,7 +92,6 @@ public class LoginTest {
 
     @Test
     @DisplayName("Авторизация по кнопке «Войти» на форме регистрации")
-    @Description("Тест проверяет что пользователь может аворизоваться при переходе из формы решистрации")
     public void checkLoginRegistration() {
         Allure.parameter("Проверка в ", browser);
         registerPage = new RegistrationPage(driver);

@@ -30,7 +30,7 @@ public class DriverFactory {
                 return new FirefoxDriver(firefoxOptions);
 
             default:
-                throw new IllegalArgumentException("Браузер " + browserName + "не работает");
+                throw new IllegalArgumentException("Браузер " + browserName + " не работает");
         }
     }
 

@@ -50,7 +50,7 @@ public class LoginPage {
         driver.findElement(PASSWORD_FIELD).sendKeys(password);
     }
 
-    @Step("Кликаем на кнопку 'Войти'")
+    @Step("Кликаем на кнопку 'Войти в аккаунт'")
     public void clickLoginButton() {
         driver.findElement(LOGIN).click();
     }

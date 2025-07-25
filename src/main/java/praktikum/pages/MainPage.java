@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static praktikum.EnvConfig.*;
-import java.time.Duration;
 
 /**
  * Тест для проверки работы главной страницы
@@ -29,6 +28,8 @@ public class MainPage {
     public static final By SAUCES_BUTTON = By.xpath(".//span[text() = 'Соусы']");
     //Локаторы для начинки
     public static final By STAFFING_BUTTON = By.xpath(".//span[text() = 'Начинки']");
+    //Локаторы для раздела
+    public static final By CHOISE_SECTION = By.xpath(".//div[contains(@class, 'tab_tab_type_current')]");
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -77,5 +78,10 @@ public class MainPage {
     public void clickStaffing() {
         driver.findElement(STAFFING_BUTTON).click();
     }
-}
 
+    @Step("Выбрать раздел")
+    public boolean choiceSection(String section) {
+        WebDriverWait wait = new WebDriverWait(driver, EXPLICIT_WAIT);
+        return wait.until(ExpectedConditions.textToBePresentInElementLocated(CHOISE_SECTION, section));
+    };
+}
