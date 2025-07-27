@@ -1,15 +1,17 @@
 package praktikum.Users;
 
 import io.qameta.allure.Step;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
 import static praktikum.EnvConfig.*;
+import static praktikum.Users.UserResponce.*;
 
 public class UserClient {
     @Step("Create new user")
     public Response register(Users user) {
         return given()
-                .baseUri(URL_USER)
+                .baseUri(BASE_URL)
                 .header("Content-Type", "application/json")
                 .body(user)
                 .when()
@@ -19,7 +21,7 @@ public class UserClient {
     @Step("User login")
     public Response login(Users user) {
         return given()
-                .baseUri(URL_USER)
+                .baseUri(BASE_URL)
                 .header("Content-Type", "application/json")
                 .body(user)
                 .when()
@@ -27,10 +29,21 @@ public class UserClient {
     }
 
     @Step("User delete")
-    public void delete(String accessToken) {
+    public static void delete(String accessToken) {
         given()
-                .baseUri(URL_USER)
                 .header("Authorization", accessToken)
-                .delete(USER_ENDPOINT);
+                .when()
+                .delete(URL_DELETE_USER);
+    }
+
+    public static String getAccessToken(Users user) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(user) // передаем объект
+                .when()
+                .post(URL_USER_LOGIN)
+                .then()
+                .extract()
+                .path("accessToken");
     }
 }

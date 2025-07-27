@@ -4,7 +4,6 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 import static praktikum.EnvConfig.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import praktikum.Users.Users;
@@ -24,20 +23,15 @@ public class LoginPage {
     //Локатор для поля "Пароль"
     private final By PASSWORD_FIELD = By.xpath(".//label[text()='Пароль']/following-sibling::input");
     //Локатор для кнопки "Войти"
-    private final By LOGIN = By.xpath(".//button[text()='Войти']");
+    private final By LOGIN = By.xpath("//button[contains(text(),'Войти')]");
     //Локатор для кнопки "Зарегистрироваться"
-    private final By REGISTER_LINK = By.xpath(".//a[@href='/register']");
+    private final By REGISTER_LINK = By.xpath("//a[@class='Auth_link__1fOlj' and text()='Зарегистрироваться']");
     //Локатор для ссылки "Восстановить пароль"
     private final By FORGOT_PASS = By.xpath(".//a[text()='Восстановить пароль']");
 
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    @Step("Проверка текста 'Вход'")
-    public String getTextInput() {
-        return driver.findElement(HEADING_INPUT).getText();
     }
 
     @Step("Вводим email")
@@ -48,6 +42,11 @@ public class LoginPage {
     @Step("Вводим пароль")
     public void passwordField(String password) {
         driver.findElement(PASSWORD_FIELD).sendKeys(password);
+    }
+
+    public void waitLoginButton() {
+        new WebDriverWait(driver, EXPLICIT_WAIT)
+                .until(ExpectedConditions.visibilityOfElementLocated(LOGIN));
     }
 
     @Step("Кликаем на кнопку 'Войти в аккаунт'")
@@ -66,11 +65,11 @@ public class LoginPage {
     }
 
     @Step("Метод ввода данных")
-    public void login(Users user) {
-        waitForm();
-        emailField(user.getEmail());
-        passwordField(user.getPassword());
-        clickLoginButton();
+    public void loginPersonalAccount(String email, String password) {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.emailField(email);
+        loginPage.passwordField(password);
+        loginPage.clickLoginButton();
     }
 
     public void waitForm() {

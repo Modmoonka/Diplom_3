@@ -1,18 +1,14 @@
 package praktikum.Users;
 
-import lombok.Getter;
-import lombok.Setter;
 
+import lombok.Data;
+
+@Data
 public class UserResponce {
-    @Getter @Setter
     private boolean success;
-    @Getter @Setter
     private Users user;
-    @Getter @Setter
     private String accessToken;
-    @Getter @Setter
     private String refreshToken;
-    @Getter @Setter
     private String message;
 
     public UserResponce(boolean success, Users user, String accessToken, String refreshToken) {

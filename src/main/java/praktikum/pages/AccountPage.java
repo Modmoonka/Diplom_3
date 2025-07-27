@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.time.Duration;
 import static praktikum.EnvConfig.EXPLICIT_WAIT;
 
 public class AccountPage {
@@ -18,6 +17,8 @@ public class AccountPage {
     private static By EXIT_BUTTON = By.xpath(".//button[text()='Выход']");
     //Локатор кнопки Конструктор
     private static By CONSTRUCTOR_BUTTON = By.xpath(".//p[text()='Конструктор']");
+    // кнопка главного экрана
+    private final By mainPageButton = By.xpath("//div[@class = 'AppHeader_header__logo__2D0X2']");
 
     public AccountPage(WebDriver driver) {
         this.driver = driver;
@@ -31,6 +32,11 @@ public class AccountPage {
     @Step("Клик на логотип")
     public void clickLogo() {
         driver.findElement(LOGO).click();
+    }
+
+    //клик по кнопке Главного экрана
+    public void clickMainPageButton() {
+        driver.findElement(mainPageButton).click();
     }
 
     @Step("Клик по кнопке Конструктор")

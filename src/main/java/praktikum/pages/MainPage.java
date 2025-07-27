@@ -15,7 +15,7 @@ public class MainPage {
     private final WebDriver driver;
 
     //Локатор через кнопку "Личный кабинет"
-    private static final By ACCOUNT_BUTTON = By.xpath(".//a[@href='/account']");
+    private static final By ACCOUNT_BUTTON = By.xpath("//a[@href='/account']");
     //Локатор по кнопке "Войти в аккаунт" на главной
     private static final By AUTH_BUTTON = By.xpath(".//button[text()='Войти в аккаунт']");
     //Локатор конструктора
@@ -26,6 +26,7 @@ public class MainPage {
     public static final By BUNS_BUTTON = By.xpath(".//span[text() = 'Булки']");;
     //Локаторы для соусов
     public static final By SAUCES_BUTTON = By.xpath(".//span[text() = 'Соусы']");
+    private final By sousesHeader = By.xpath("//h2[@class = 'text text_type_main-medium mb-6 mt-10' and text() = 'Соусы']");
     //Локаторы для начинки
     public static final By STAFFING_BUTTON = By.xpath(".//span[text() = 'Начинки']");
     //Локаторы для раздела
@@ -35,9 +36,13 @@ public class MainPage {
         this.driver = driver;
     }
 
-    @Step("Открытие главной страницы")
     public void openMainPage() {
-         driver.get(URL_USER);
+        driver.get(BASE_URL);
+    }
+
+    public void waitUntilMainPAgeUrlIsVisible(){
+        new WebDriverWait(driver, EXPLICIT_WAIT)
+                .until(ExpectedConditions.urlToBe(BASE_URL));
     }
 
     @Step("Клик на кнопку 'Войти в аккаунт'")
@@ -69,9 +74,20 @@ public class MainPage {
         driver.findElement(BUNS_BUTTON).click();
     }
 
+    @Step("Ждем появления заголовка Булочки")
+    public void waitBunsHeader() {
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.visibilityOfElementLocated(BUNS_BUTTON));
+    }
+
     @Step("Клик по разделу соусов")
     public void clickSauces() {
         driver.findElement(SAUCES_BUTTON).click();
+    }
+
+    public void waitUntilSousesHeaderBecomesVisible() {
+        new WebDriverWait(driver, EXPLICIT_WAIT)
+                .until(ExpectedConditions.visibilityOfElementLocated(sousesHeader));
     }
 
     @Step("Клик по разделу начинок")

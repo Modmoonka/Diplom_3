@@ -1,9 +1,9 @@
 package tests;
 
 import io.qameta.allure.Allure;
+import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,84 +11,98 @@ import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import praktikum.DriverFactory;
 import praktikum.pages.*;
-import praktikum.Users.*;
-import static praktikum.EnvConfig.URL_USER;
+import static org.junit.Assert.assertEquals;
+import static praktikum.EnvConfig.*;
+
+/**
+ Переход в личный кабинет
+ Проверь переход по клику на «Личный кабинет».
+ Переход из личного кабинета в конструктор
+ Проверь переход по клику на «Конструктор» и на логотип Stellar Burgers.
+ Выход из аккаунта
+ Проверь выход по кнопке «Выйти» в личном кабинете.
+ */
 
 @RunWith(Parameterized.class)
 public class AccountPageTest {
-    private AccountPage accountPage;
-    private WebDriver driver;
+    private WebDriver webDriver;
     private MainPage mainPage;
-    private Users user;
     private LoginPage loginPage;
-    UserClient userApiClient;
-    String browser;
+    private AccountPage accountPage;
 
-    @Parameterized.Parameters(name="Browser {0}")
-    public static Object[][] initParams() {
-        return new Object[][] {
-                {"chrome"},
-                {"yandex"}
-        };
+    String browser;
+    String email = "email123456@mail.com";
+    String password = "qwerty1";
+
+    @Parameterized.Parameters(name = "Браузер: {0}")
+    public static Object[] browsers() {
+        return new Object[]{"chrome", "yandex"};
     }
+
+
     public AccountPageTest(String browser) {
         this.browser = browser;
     }
 
     @Before
     public void setUp() {
-        driver = DriverFactory.createDriver(browser);
-        driver.get(URL_USER);
-        loginPage = new LoginPage(driver);
-        mainPage = new MainPage(driver);
-        userApiClient = new UserClient();
-        user = Users.random();
-        userApiClient.register(user);
-        mainPage.waitPageLoad();
-        mainPage.openMainPage();
-        loginPage.waitForm();
-        loginPage.login(user);
-        mainPage.waitPageLoad();
+        webDriver = DriverFactory.createDriver(browser);
+        mainPage = new MainPage(webDriver);
+        loginPage = new LoginPage(webDriver);
+        accountPage = new AccountPage(webDriver);
+
     }
 
     @After
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
+    public void tearDown() {
+        if (webDriver != null) {
+            webDriver.quit();
         }
     }
 
     @Test
-    @DisplayName("Клик на личный кабинет")
-    public void checkAccountPage() {
+    @DisplayName("Переход в личнвй кабинетс главной страницы после в хода в аккаунт")
+    public void checkTransferToAccountPage() {
         Allure.parameter("Проверка в ", browser);
-        accountPage = new AccountPage(driver);
+        mainPage.openMainPage();
         mainPage.clickAuthButton();
+        loginPage.waitForm();
+        loginPage.loginPersonalAccount(email, password);
+        mainPage.waitUntilMainPAgeUrlIsVisible();
+        mainPage.clickPersonalAccount();
         accountPage.waitForm();
-        Assert.assertTrue("Не произошел переход в Личный Кабинет",driver.getCurrentUrl().contains("/account/profile"));
+        assertEquals("Должна быть страница личного кабинета", PROFILE_PAGE_URL, webDriver.getCurrentUrl());
     }
 
     @Test
-    @DisplayName("Клик в Конструктор через кнопку Конструктор")
-    public void choiceOpenConstructor() {
+    @DisplayName("Переход в в конструктор главной страницы из личного кабинета")
+    public void checkTransferToConstuctor() {
         Allure.parameter("Проверка в ", browser);
+        mainPage.openMainPage();
+        mainPage.clickAuthButton();
+        loginPage.waitForm();
+        loginPage.loginPersonalAccount(email, password);
+        mainPage.waitUntilMainPAgeUrlIsVisible();
         mainPage.clickPersonalAccount();
-        accountPage = new AccountPage(driver);
         accountPage.waitForm();
         accountPage.clickConstructor();
-        mainPage.waitPageLoad();
-        Assert.assertTrue("Конструктор не загружен", mainPage.isConstructorVisible());
+        mainPage.isConstructorVisible();
+        assertEquals("Должна быть страница личного кабинета", BASE_URL, webDriver.getCurrentUrl());
     }
 
     @Test
-    @DisplayName("Выход из профиля")
-    public void checkLogout() {
+    @DisplayName("Выход из аккаунта из личного кабинета")
+    public void checkExitFromAccount() {
         Allure.parameter("Проверка в ", browser);
+        mainPage.openMainPage();
         mainPage.clickAuthButton();
-        accountPage = new AccountPage(driver);
+        loginPage.waitForm();
+        loginPage.loginPersonalAccount(email, password);
+        mainPage.waitUntilMainPAgeUrlIsVisible();
+        mainPage.clickPersonalAccount();
         accountPage.waitForm();
         accountPage.clickExit();
         loginPage.waitForm();
-        Assert.assertTrue("Не произошел редирект на форму авторизации",driver.getCurrentUrl().contains("/login"));
+        assertEquals("Должна быть страница входа в аккаунт", LOGIN_PAGE_URL, webDriver.getCurrentUrl());
     }
 }

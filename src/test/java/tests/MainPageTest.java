@@ -1,8 +1,6 @@
 package tests;
 
 import io.qameta.allure.Allure;
-import io.qameta.allure.Description;
-import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
 import org.junit.Assert;
@@ -13,7 +11,11 @@ import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import praktikum.pages.MainPage;
 import praktikum.DriverFactory;
-import static praktikum.EnvConfig.URL_USER;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static praktikum.EnvConfig.BASE_URL;
+import static praktikum.pages.MainPage.BUNS_BUTTON;
 
 @RunWith(Parameterized.class)
 public class MainPageTest {
@@ -21,13 +23,11 @@ public class MainPageTest {
     private MainPage mainPage;
     String browser;
 
-    @Parameterized.Parameters(name="Browser {0}")
-    public static Object[][] initParams() {
-        return new Object[][] {
-                {"chrome"},
-                {"yandex"}
-        };
+    @Parameterized.Parameters(name = "Браузер: {0}")
+    public static Object[] browsers() {
+        return new Object[]{"chrome", "yandex"};
     }
+
     public MainPageTest(String browser) {
         this.browser = browser;
     }
@@ -35,8 +35,7 @@ public class MainPageTest {
     @Before
     public void setUp() {
         driver = DriverFactory.createDriver(browser);
-        driver.get(URL_USER);
-
+        driver.get(BASE_URL);
         mainPage = new MainPage(driver);
         mainPage.waitPageLoad();
 
@@ -52,10 +51,12 @@ public class MainPageTest {
 
     @Test
     @DisplayName("Открыть раздел булки")
-    public void choiceBuns() {
+    public void checkClickBunsButton(){
         Allure.parameter("Проверка в ", browser);
+        mainPage.openMainPage();
         mainPage.clickSauces();
         mainPage.clickBuns();
+        mainPage.waitBunsHeader();
         Assert.assertTrue("Не перешли на раздел Булки",mainPage.choiceSection("Булки"));
     }
 
@@ -63,6 +64,7 @@ public class MainPageTest {
     @DisplayName("Открыть раздел соусы")
     public void choiceSauces() {
         Allure.parameter("Проверка в ", browser);
+        mainPage.openMainPage();
         mainPage.clickSauces();
         Assert.assertTrue("Не перешли на раздел Соусы",mainPage.choiceSection("Соусы"));
     }
@@ -71,6 +73,7 @@ public class MainPageTest {
     @DisplayName("Открыть раздел начинки")
     public void checkSelectFillingsSection() {
         Allure.parameter("Проверка в ", browser);
+        mainPage.openMainPage();
         mainPage.clickStaffing();
         Assert.assertTrue("Не перешли на раздел Начинки",mainPage.choiceSection("Начинки"));
     }
