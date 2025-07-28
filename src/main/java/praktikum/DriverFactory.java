@@ -15,29 +15,25 @@ public class DriverFactory {
             browserName = "chrome"; // если ничего не передали, по умолчанию Chrome
         }
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage");
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
 
         switch (browserName.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage");
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
                 return new ChromeDriver(chromeOptions);
 
             case "yandex":
-                return  createYandexDriver(chromeOptions);
+                System.setProperty("webdriver.chrome.driver", "src/test/resources/yandexdriver.exe");
+                ChromeOptions options = new ChromeOptions();
+                options.setBinary("C:\\Users\\admin\\AppData\\Local\\Yandex\\YandexBrowser\\Application\\browser.exe");
+                return new ChromeDriver(options);
 
             default:
                 throw new IllegalArgumentException("Браузер " + browserName + " не работает");
         }
-    }
-
-    private static WebDriver createYandexDriver(ChromeOptions options) {
-        System.setProperty("webdriver.chrome.driver",
-                System.getenv("CHROMEDRIVER_132"));
-        options.setBinary(System.getenv("YANDEX_BROWSER_PATH"));
-        return new ChromeDriver(options);
     }
 
     private static final Properties properties = new Properties();

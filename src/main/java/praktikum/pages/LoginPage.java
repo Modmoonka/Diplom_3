@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import static praktikum.EnvConfig.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import praktikum.Users.Users;
 
 /**
  * Тест для проверки работы страницы авторизации

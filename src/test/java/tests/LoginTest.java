@@ -56,6 +56,7 @@ public class LoginTest {
         if (webDriver != null) {
             webDriver.quit();
         }
+
     }
 
     @Test
